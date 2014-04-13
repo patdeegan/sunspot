@@ -91,15 +91,20 @@ module Sunspot
       def run
         bootstrap
 
+        if solr_home && !solr_home.nil?
+          expanded_solr_home = File.expand_path(solr_home)
+        end
+
         command = ['java']
         command << "-Xms#{min_memory}" if min_memory
         command << "-Xmx#{max_memory}" if max_memory
         command << "-Djetty.port=#{port}" if port
         command << "-Djetty.host=#{bind_address}" if bind_address
         command << "-Dsolr.data.dir=#{solr_data_dir}" if solr_data_dir
-        command << "-Dsolr.solr.home=#{solr_home}" if solr_home
+        command << "-Dsolr.solr.home=#{expanded_solr_home}" if solr_home
         command << "-Djava.util.logging.config.file=#{logging_config_path}" if logging_config_path
         command << '-jar' << File.basename(solr_jar)
+        
         FileUtils.cd(File.dirname(solr_jar)) do
           exec(*command)
         end
