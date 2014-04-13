@@ -91,7 +91,7 @@ module Sunspot
       def run
         bootstrap
 
-        if solr_home && !solr_home.nil?
+        if solr_home
           expanded_solr_home = File.expand_path(solr_home)
         end
 
